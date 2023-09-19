@@ -1,4 +1,4 @@
-# Teoria dos Grafos - COS 242 (2023/2) - Trabalho de Disciplina - Parte 
+# Teoria dos Grafos - COS 242 (2023/2) - Trabalho de Disciplina - Parte 1
 
 Este repositório contém os materiais e o código relacionados ao Trabalho de Disciplina - Parte 1 da disciplina de Teoria dos Grafos (COS 242) no segundo semestre de 2023.
 
