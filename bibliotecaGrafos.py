@@ -1,17 +1,20 @@
+import gc as gc
+import numpy as np
+
 class Grafo:
     def __init__(self):
         self.vertices = set()
         self.arestas = []
-
+        self.num_vertices = 0
     def adicionar_aresta(self, u, v):
         self.vertices.add(u)
         self.vertices.add(v)
         self.arestas.append((u, v))
 
     def calcular_informacoes(self):
-        num_vertices = len(self.vertices)
+        self.num_vertices = len(self.vertices)
         num_arestas = len(self.arestas)
-        graus = [0] * num_vertices
+        graus = [0] * self.num_vertices
 
         for u, v in self.arestas:
             graus[u - 1] += 1
@@ -19,24 +22,36 @@ class Grafo:
 
         grau_minimo = min(graus)
         grau_maximo = max(graus)
-        grau_medio = sum(graus) / num_vertices
+        grau_medio = sum(graus) / self.num_vertices
 
         graus.sort()
-        mediana = graus[num_vertices // 2]
+        mediana = graus[self.num_vertices // 2]
 
-        return num_vertices, num_arestas, grau_minimo, grau_maximo, grau_medio, mediana
+        return self.num_vertices, num_arestas, grau_minimo, grau_maximo, grau_medio, mediana
 
     def componentes_conexas(self):
         # Implementar aqui o algoritmo BFS ou DFS para encontrar as componentes conexas.
         pass
 
-#    def vetorDeAjacencia(self):
-#        vetor = np.array([])
-#        for vertice in range (1, self.vertices):
-#            vetor.concatenate(vetor)
-#            for linha in self.arestas:
-#                if str(vertice) in linha:
-#        for linha in self.arestas:
+    def matriz_de_adjacencia(self): #Método para representação em Matriz de ajacência usando o método np.zeros.
+        matriz = np.zeros(self.num_vertices, self.num_vertices, dtype= int) #inicializa a matriz com zeros.
+        for aresta in self.arestas:  #percorre a lista de arestas.
+            x, y = aresta #atribui os valores de aresta a x e y.
+            matriz[x][y] = 1
+            matriz[y][x] = 1   #Assumindo que o grafo não é direcionado, atribui as ligações à matriz.
+            
+        return matriz #retorna a matriz de adjacência.
+    
+    def vetor_de_adjacencia(self): #Método para representação em Lista de adjacência.
+        vetor = np.full(self.num_vertices, np.array([])) #Inicializa o vetor com arrays vazios.
+        for vertice in self.vertices: #percorre a lista de arestas.
+            for aresta in self.arestas: #percorre a lista de arestas.
+                if vertice == self.arestas[vertice-1][0]:
+                    vetor[vertice-1] = np.union1d(vetor[vertice-1], vertice) #Adiciona esse vértice na lista de vizinhos do vértice atual.
+
+                    # ATENCAO, MELHORAR ESSE CODIGO, 2 FORS NAO EH LEGAL!
+    
+        
             
 
     def ler_grafo(self, arquivo_entrada):
