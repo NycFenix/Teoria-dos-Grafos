@@ -1,6 +1,6 @@
 import gc as gc
 import numpy as np
-
+from bibliotecaFilaPilha import *
 class Grafo:
     def __init__(self):
         self.vertices = set()
@@ -49,11 +49,51 @@ class Grafo:
                 if vertice == self.arestas[vertice-1][0]:
                     vetor[vertice-1] = np.union1d(vetor[vertice-1], vertice) #Adiciona esse vértice na lista de vizinhos do vértice atual.
 
+        return vetor #retorna o vetor de adjacência.
                     # ATENCAO, MELHORAR ESSE CODIGO, 2 FORS NAO EH LEGAL!
     
         
+    def BFS(self, vertice_inicial): #BFS usando o vetor de adjacencia para representação
+        vetor_marcacao = np.zeros(self.num_vertices, dtype= int) #inicializa a lista de marcação com zeros (desmarca todos os vértices).
+        vetor_pais_e_niveis = np.full((self.num_vertices,),np.array([None, None])) #inicializa o vetor de pais e níveis com None. O formato do vetor apresenta vetores internos com [pai, nível] de cada vértice.
+        vetor_pais_e_niveis[vertice_inicial -1][1] = 0 #Define o nível da raiz como 0. 
+        Q = Fila() #Define a fila de explorados vazia
+        vetor_marcacao[vertice_inicial -1] = 1 #Marca o vértice inicial #Marca o vértice inicial
+        Q.enqueue(vertice_inicial) #Adiciona o vértice inicial na fila. #Adiciona o vértice inicial na raiz
+        vetor_adjacencia = self.vetor_de_adjacencia()
+        while Q.isEmpty() != True:
+            v = Q.dequeue() #Remove o primeiro elemento da fila e atribui a v.
+            for w in vetor_adjacencia[v-1]: #Para cada vizinho w de v
+                if vetor_marcacao[w-1] == 0: #Se w não estiver marcado
+                    vetor_marcacao[w-1] = 1 #Marca w
+                    Q.enqueue(w) #Adiciona w na fila.
+                    vetor_pais_e_niveis[w-1][0] = v #Define o pai de w como v.
+                    vetor_pais_e_niveis[w-1][1] = vetor_pais_e_niveis[v-1][1] + 1 #Define o nível de w como o nível de v + 1.
+                    
+        return vetor_pais_e_niveis #retorna o vetor de pais e níveis.
+    
+    def DFS(self, vertice_inicial): #DFS usando o vetor de adjacencia para representação. Retorna a lista de pais e níveis no formato [pai, nível].
+        vetor_marcacao = np.zeros(self.num_vertices, dtype= int) #inicializa a lista de marcação com zeros (desmarca todos os vértices).
+        vetor_pais_e_niveis = np.full((self.num_vertices,),np.array([None, None])) #inicializa o vetor de pais e níveis com None. O formato do vetor apresenta vetores internos com [pai, nível] de cada vértice.
+        vetor_pais_e_niveis[vertice_inicial -1][1] = 0 #Define o nível da raiz como 0.
+        P = Pilha() #Define a pilha de explorados
+        P.push(vertice_inicial) #Adiciona o vértice inicial na pilha.
+        vetor_adjacencia = self.vetor_de_adjacencia()
+        while P.isEmpty() != True: #Se a pilha não estiver vazia
+            u = P.pop() #Remove o topo da pilha e atribui a u.
+            if vetor_marcacao[u-1] == 0: #Se u não estiver marcado
+                vetor_marcacao[u-1] = 1 #Marca u
+                for v in vetor_adjacencia[u-1]: #Para cada vizinho v de u
+                    P.push(v) #Adiciona v na pilha.
+                    vetor_pais_e_niveis[v-1][0] = u #Define o pai de v como u.
+                    vetor_pais_e_niveis[v-1][1] = vetor_pais_e_niveis[u-1][1] + 1 #Define o nível de v como o nível de u + 1.
+        
+        return vetor_pais_e_niveis #retorna o vetor de pais e níveis.
+    
             
-
+            
+            
+            
     def ler_grafo(self, arquivo_entrada):
         with open(arquivo_entrada, 'r') as arquivo:
             num_vertices = int(arquivo.readline().strip())
