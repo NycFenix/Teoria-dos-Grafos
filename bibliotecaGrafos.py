@@ -112,5 +112,29 @@ class Grafo:
                 diametro = distancia
         return diametro        
             
+    def ler_grafo(self, arquivo_entrada):
+        with open(arquivo_entrada, 'r') as arquivo:
+            num_vertices = int(arquivo.readline().strip())
+            for linha in arquivo:
+                u, v = map(int, linha.split())
+                self.adicionar_aresta(u, v)
+
+    def escrever_informacoes(self, arquivo_saida):
+        num_vertices, num_arestas, grau_minimo, grau_maximo, grau_medio, mediana = self.calcular_informacoes()
+
+        with open(arquivo_saida, 'w', encoding='utf-8') as arquivo:
+            arquivo.write(f"Número de vértices: {num_vertices}\n")
+            arquivo.write(f"Número de arestas: {num_arestas}\n")
+            arquivo.write(f"Grau mínimo: {grau_minimo}\n")
+            arquivo.write(f"Grau máximo: {grau_maximo}\n")
+            arquivo.write(f"Grau médio: {grau_medio:.2f}\n")
+            arquivo.write(f"Mediana de grau: {mediana}\n")
+
+
+if __name__ == "__main__":
+    meu_grafo = Grafo()
+    meu_grafo.ler_grafo("entrada.txt")
+    meu_grafo.componentes_conexas() 
+    meu_grafo.escrever_informacoes("informacoes.txt")
 
 
