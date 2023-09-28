@@ -53,7 +53,7 @@ class Grafo:
                     # ATENCAO, MELHORAR ESSE CODIGO, 2 FORS NAO EH LEGAL!
     
         
-    def BFS(self, vertice_inicial): #BFS usando o vetor de adjacencia para representação
+    def BFS(self, vertice_inicial): #BFS usando o vetor de adjacencia para representação (custo de O(m+n))
         vetor_marcacao = np.zeros(self.num_vertices, dtype= int) #inicializa a lista de marcação com zeros (desmarca todos os vértices).
         vetor_pais_e_niveis = np.full((self.num_vertices,),np.array([None, None])) #inicializa o vetor de pais e níveis com None. O formato do vetor apresenta vetores internos com [pai, nível] de cada vértice.
         vetor_pais_e_niveis[vertice_inicial -1][1] = 0 #Define o nível da raiz como 0. 
@@ -61,6 +61,7 @@ class Grafo:
         vetor_marcacao[vertice_inicial -1] = 1 #Marca o vértice inicial #Marca o vértice inicial
         Q.enqueue(vertice_inicial) #Adiciona o vértice inicial na fila. #Adiciona o vértice inicial na raiz
         vetor_adjacencia = self.vetor_de_adjacencia()
+        
         while Q.isEmpty() != True:
             v = Q.dequeue() #Remove o primeiro elemento da fila e atribui a v.
             for w in vetor_adjacencia[v-1]: #Para cada vizinho w de v
@@ -79,6 +80,7 @@ class Grafo:
         P = Pilha() #Define a pilha de explorados
         P.push(vertice_inicial) #Adiciona o vértice inicial na pilha.
         vetor_adjacencia = self.vetor_de_adjacencia()
+        
         while P.isEmpty() != True: #Se a pilha não estiver vazia
             u = P.pop() #Remove o topo da pilha e atribui a u.
             if vetor_marcacao[u-1] == 0: #Se u não estiver marcado
@@ -91,38 +93,24 @@ class Grafo:
         return vetor_pais_e_niveis #retorna o vetor de pais e níveis.
     
             
-            
-            
-            
-    def ler_grafo(self, arquivo_entrada):
-        with open(arquivo_entrada, 'r') as arquivo:
-            num_vertices = int(arquivo.readline().strip())
-            for linha in arquivo:
-                u, v = map(int, linha.split())
-                self.adicionar_aresta(u, v)
-
-    def escrever_informacoes(self, arquivo_saida):
-        num_vertices, num_arestas, grau_minimo, grau_maximo, grau_medio, mediana = self.calcular_informacoes()
-
-        with open(arquivo_saida, 'w', encoding='utf-8') as arquivo:
-            arquivo.write(f"Número de vértices: {num_vertices}\n")
-            arquivo.write(f"Número de arestas: {num_arestas}\n")
-            arquivo.write(f"Grau mínimo: {grau_minimo}\n")
-            arquivo.write(f"Grau máximo: {grau_maximo}\n")
-            arquivo.write(f"Grau médio: {grau_medio:.2f}\n")
-            arquivo.write(f"Mediana de grau: {mediana}\n")
 
 
-if __name__ == "__main__":
-    meu_grafo = Grafo()
-    meu_grafo.ler_grafo("entrada.txt")
-    meu_grafo.componentes_conexas() 
-    meu_grafo.escrever_informacoes("informacoes.txt")
-
-
-
-          
-         
+    def distancia(self, vertice_inicial, vertice_final): #Método para descobrir a distância entre dois vértices a partir da BFS (usa o vetor de adjacencia como reprentatividade)
+        # Custo O(m+n) (custo da BFS)
+        vetor_pais_e_niveis = self.BFS(vertice_inicial) #Inicializa o vetor de pais e niveis
+        distancia = vetor_pais_e_niveis[vertice_final-1][1] #defie a distancia como o nível de explorados da BFS
+        return distancia
+        
+        
+    def diametro(self): #FAZER DEPOIS (Método que calcula o maior caminho mínimo entre 2 vértices quaisquer do grafos)
+        #Custo = Custo(BFS) + O(grau(1) -1)
+        # Jeito de otimizar: ter certeza que a iteração comece do vértice de menor grau
+        diametro = 0
+        for vertice in self.vertices:
+            distancia = self.distancia(1, vertice) #Checa a distancia de todos os caminhos incluindo o vértice 1
+            if distancia > diametro: 
+                diametro = distancia
+        return diametro        
             
 
 
