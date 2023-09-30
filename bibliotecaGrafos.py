@@ -34,24 +34,26 @@ class Grafo:
         pass
 
     def matriz_de_adjacencia(self): #Método para representação em Matriz de ajacência usando o método np.zeros.
-        matriz = np.zeros(self.num_vertices, self.num_vertices, dtype= int) #inicializa a matriz com zeros.
+        matriz = np.zeros((self.num_vertices,self.num_vertices), int) #inicializa a matriz com zeros.
         for aresta in self.arestas:  #percorre a lista de arestas.
             x, y = aresta #atribui os valores de aresta a x e y.
-            matriz[x][y] = 1
-            matriz[y][x] = 1   #Assumindo que o grafo não é direcionado, atribui as ligações à matriz.
+            matriz[x-1][y-1] = 1
+            matriz[y-1][x-1] = 1   #Assumindo que o grafo não é direcionado, atribui as ligações à matriz.
             
         return matriz #retorna a matriz de adjacência.
     
     def vetor_de_adjacencia(self): #Método para representação em Lista de adjacência.
-        vetor = np.full(self.num_vertices, np.array([])) #Inicializa o vetor com arrays vazios.
-        for vertice in self.vertices: #percorre a lista de arestas.
-            for aresta in self.arestas: #percorre a lista de arestas.
-                if vertice == self.arestas[vertice-1][0]:
-                    vetor[vertice-1] = np.union1d(vetor[vertice-1], vertice) #Adiciona esse vértice na lista de vizinhos do vértice atual.
+        vetor = np.zeros((self.num_vertices, ), Fila)
+        for n in range(self.num_vertices):
+            vetor[n] = Fila() #Adiciona uma fila vazia para cada vértice.
+        for aresta in self.arestas:
+            g, h = aresta
+            vetor[g-1].uniao(h)
+            vetor[h-1].uniao(g)
+                    
+        return vetor
+                
 
-        return vetor #retorna o vetor de adjacência.
-                    # ATENCAO, MELHORAR ESSE CODIGO, 2 FORS NAO EH LEGAL!
-    
         
     def BFS(self, vertice_inicial): #BFS usando o vetor de adjacencia para representação (custo de O(m+n))
         vetor_marcacao = np.zeros(self.num_vertices, dtype= int) #inicializa a lista de marcação com zeros (desmarca todos os vértices).
@@ -114,7 +116,7 @@ class Grafo:
             
     def ler_grafo(self, arquivo_entrada):
         with open(arquivo_entrada, 'r') as arquivo:
-            num_vertices = int(arquivo.readline().strip())
+            self.num_vertices = int(arquivo.readline().strip())
             for linha in arquivo:
                 u, v = map(int, linha.split())
                 self.adicionar_aresta(u, v)
@@ -136,5 +138,12 @@ if __name__ == "__main__":
     meu_grafo.ler_grafo("entrada.txt")
     meu_grafo.componentes_conexas() 
     meu_grafo.escrever_informacoes("informacoes.txt")
+    # m_j = meu_grafo.matriz_de_adjacencia()# Teste da matriz de adjacencia 
+    # print(m_j)  
+    # v_j = meu_grafo.vetor_de_adjacencia() #Teste do vetor de adjacencia4
+    # print(v_j)
+    # print(meu_grafo.arestas)
+    # print(meu_grafo.vertices)
+    # print(meu_grafo.num_vertices)
 
 
