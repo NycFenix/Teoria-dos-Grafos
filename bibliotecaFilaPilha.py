@@ -31,6 +31,14 @@ class Pilha:
         self.tamanho -=1
         return removido.valor
     
+    def esta_na_fila(self, valor):
+        current = self.head
+        while current:
+            if current.valor == valor:
+                return True
+            current = current.next
+        return False
+    
 class Fila:
     def __init__(self):
         self.head = None

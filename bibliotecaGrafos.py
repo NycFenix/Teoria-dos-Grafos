@@ -83,6 +83,7 @@ class Grafo:
     
     def DFS(self, vertice_inicial): #DFS usando o vetor de adjacencia para representação. Retorna a lista de pais e níveis no formato [pai, nível].
         vetor_marcacao = np.zeros(self.num_vertices, dtype= int)
+        vetor_adjacencia = self.vetor_de_adjacencia() #Inicializa vetor de adjacencia
         
         vetor_pais_e_niveis = np.full((self.num_vertices,2),np.array([None, None])) #inicializa o vetor de pais e níveis com None. O formato do vetor apresenta vetores internos com [pai, nível] de cada vértice.
         vetor_pais_e_niveis[vertice_inicial -1][1] = 0 #Define o nível da raiz como 0. 
@@ -93,8 +94,19 @@ class Grafo:
         
         while P.isEmpty() != True: #Enquanto a pilha não estiver vazia...
             u = P.pop() #Remove o primeiro elemento da pilha e atribui a u.
-            if vetor_marcacao[u-1] == 0: #Se u não estiver marcado...
-                vetor_marcacao[u-1] = 1 #... marca u
+            vizinho_atual = vetor_adjacencia[u-1].head
+        
+            while vizinho_atual: #Percorre os vizinhos de u
+                valor_vizinho = vizinho_atual.valor
+                if vetor_marcacao[valor_vizinho-1] == 0: #Se u não estiver marcado...
+                    vetor_marcacao[valor_vizinho-1] = 1 #... marca u
+                    P.push(valor_vizinho)
+                    vetor_pais_e_niveis[valor_vizinho-1][0] = u #Define o pai de nodo atual como u.
+                    vetor_pais_e_niveis[valor_vizinho-1][1] = vetor_pais_e_niveis[u-1][1] + 1 #Define o nível de nodo atual como o nível de u + 1.
+
+                vizinho_atual = vizinho_atual.next #Avanca para o proximo vizinho de u
+                    
+        return vetor_pais_e_niveis
                 
                 
                 
@@ -105,8 +117,7 @@ class Grafo:
                 #     vetor_pais_e_niveis[v-1][0] = u #Define o pai de v como u.
                 #     vetor_pais_e_niveis[v-1][1] = vetor_pais_e_niveis[u-1][1] + 1 #Define o nível de v como o nível de u + 1.
         
-        return vetor_pais_e_niveis #retorna o vetor de pais e níveis.
-    
+       
             
 
 

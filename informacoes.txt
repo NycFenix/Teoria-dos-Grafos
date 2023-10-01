@@ -1,5 +1,5 @@
-Número de vértices: 5
-Número de arestas: 5
+Número de vértices: 6
+Número de arestas: 6
 Grau mínimo: 1
 Grau máximo: 4
 Grau médio: 2.00
