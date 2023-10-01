@@ -8,7 +8,7 @@ class Nodo:
 #Criação da Pilha
 class Pilha:
     def __init__(self):
-        self.head = Nodo("head")
+        self.head = None
         self.tamanho = 0
         
     def get_size(self):
@@ -19,19 +19,18 @@ class Pilha:
         
     def push(self, valor):
         nodo = Nodo(valor)
-        nodo.next = self.head.next
-        self.head.next = nodo
+        nodo.next = self.head
+        self.head = nodo
         self.tamanho +=1
         
     def pop(self):
         if self.isEmpty():
             raise Exception("Pilha vazia!")
-        removido = self.head.next
-        self.head.next = self.head.next.next
+        removido = self.head
+        self.head = self.head.next
         self.tamanho -=1
-        return removido.valor  
+        return removido.valor
     
-    set
 class Fila:
     def __init__(self):
         self.head = None
@@ -52,7 +51,10 @@ class Fila:
         else:
             removido = self.head.valor
             self.head = self.head.next
-            self.head.prev = None
+            if self.head:
+                self.head.prev = None
+            else:
+                self.last = None
             return removido
         
     def isEmpty(self):
@@ -85,10 +87,10 @@ class Fila:
             current = current.next
         return False
     
-fila = Fila()
-fila.enqueue(6923)
-fila.enqueue(100)
-fila.enqueue(99)
-fila.enqueue(8)
-print(fila.head.valor)
-print(fila)
+# fila = Fila()
+# fila.enqueue(6923)
+# fila.enqueue(100)
+# fila.enqueue(99)
+# fila.enqueue(8)
+# print(fila.head.valor)
+# print(fila)
