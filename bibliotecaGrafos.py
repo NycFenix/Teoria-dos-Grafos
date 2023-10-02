@@ -223,7 +223,7 @@ class Grafo:
             if distancia > diametro: 
                 diametro = distancia
         return diametro        
-    
+
     def componentes_conexas(self):
         componentes_conexas = np.array([])
         self.vetor_marcacao = np.zeros(self.num_vertices)
@@ -275,12 +275,13 @@ if __name__ == "__main__":
     while True:
         exibir_menu()
         opcao = input("Digite o número da opção desejada: ")
+        print("\n")
         if opcao == '1':
             meu_grafo.imprimir_informacoes()
         elif opcao == '2':
             vertice_inicial = int(input("Digite o vértice inicial para a BFS: "))
             resultado = meu_grafo.BFS(vertice_inicial, escolha_representacao)
-            print("\nÁrvore de Busca em Largura (BFS):")
+            print("Árvore de Busca em Largura (BFS):")
             for v in range(meu_grafo.num_vertices):
                 if resultado[v][0] is not None:
                     pai, nivel = resultado[v]
@@ -291,7 +292,7 @@ if __name__ == "__main__":
             vertice_inicial = int(input("Digite o vértice inicial para a DFS: "))
             resultado  = meu_grafo.DFS(vertice_inicial,escolha_representacao)
             # Adicione instruções de impressão aqui
-            print("\nÁrvore de Busca em Profundidade (DFS):")
+            print("Árvore de Busca em Profundidade (DFS):")
             for v in range(meu_grafo.num_vertices):
                             if resultado[v][0] is not None:
                                 pai, nivel = resultado[v]
@@ -301,14 +302,14 @@ if __name__ == "__main__":
         elif opcao == '4':
             vertice_inicial = int(input("Digite o vértice inicial: "))
             vertice_final = int(input("Digite o vértice final: "))
-            meu_grafo.distancia(vertice_inicial, vertice_final, escolha_representacao)
+            distancia = meu_grafo.distancia(vertice_inicial, vertice_final, escolha_representacao)
+            print(f"A distância entre {vertice_inicial} e {vertice_final} é {distancia}.")
         elif opcao == '5':
-            print(meu_grafo.diametro())
-            
+            diametro = meu_grafo.diametro()
+            print(f"O diâmetro do grafo é {diametro}.")
         elif opcao == '6':
-            print(meu_grafo.componentes_conexas())
-            
-        
+            resultado = meu_grafo.componentes_conexas()
+            print("Componentes conexas do grafo:",resultado)
         elif opcao == '7':
             print("Encerrando o programa.")
             break
