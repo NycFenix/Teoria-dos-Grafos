@@ -87,6 +87,13 @@ class Grafo:
                         Q.enqueue(w + 1)  # Adiciona w na fila.
                         vetor_pais_e_niveis[w][0] = v  # Define o pai de w como v.
                         vetor_pais_e_niveis[w][1] = vetor_pais_e_niveis[v - 1][1] + 1  # Define o nível de w como o nível de v + 1.
+
+            with open("BFS_matriz_adjacencia", 'w', encoding='utf-8') as arquivo:
+                        arquivo.write("Árvore de Busca em Largura (BFS):\n")
+                        for v in range(self.num_vertices):
+                            if vetor_pais_e_niveis[v][0] is not None:
+                                arquivo.write(f"Vértice {v+1}: Pai = {vetor_pais_e_niveis[v][0]}, Nível = {vetor_pais_e_niveis[v][1]}\n")
+            return vetor_pais_e_niveis  # Retorna o vetor de pais e níveis.                        
             
             return vetor_pais_e_niveis  # Retorna o vetor de pais e níveis.
         
@@ -113,8 +120,13 @@ class Grafo:
                         Q.enqueue(valor_vizinho) #Adiciona vizinho atual na fila
                         vetor_pais_e_niveis[valor_vizinho-1][0] = v #Define o pai de nodo atual como v.
                         vetor_pais_e_niveis[valor_vizinho-1][1] = vetor_pais_e_niveis[v-1][1] + 1 #Define o nível de nodo atual como o nível de v + 1.
-                    vizinho_atual = vizinho_atual.next #Passa para o próximo vizinho de v.     
-
+                    vizinho_atual = vizinho_atual.next #Passa para o próximo vizinho de v.   
+                      
+                with open("BFS_vetor_adjacencia", 'w', encoding='utf-8') as arquivo:
+                                        arquivo.write("Árvore de Busca em Largura (BFS) usando Vetor de Adjacência:\n")
+                                        for v in range(self.num_vertices):
+                                            if vetor_pais_e_niveis[v][0] is not None:
+                                                arquivo.write(f"Vértice {v+1}: Pai = {vetor_pais_e_niveis[v][0]}, Nível = {vetor_pais_e_niveis[v][1]}\n")    
                         
             return vetor_pais_e_niveis #retorna o vetor de pais e níveis.
     
