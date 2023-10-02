@@ -3,7 +3,8 @@ import psutil
 import numpy as np
 np.set_printoptions(threshold=np.inf)
 from bibliotecaFilaPilha import *
-
+import time
+import sys
 class Grafo:
     def __init__(self):
         self.vertices = set()
@@ -21,7 +22,7 @@ class Grafo:
         self.num_vertices = len(self.vertices)
         num_arestas = self.arestas.size
         graus = [0] * self.num_vertices
-        
+
         for u, v in self.arestas:
             graus[u - 1] += 1
             graus[v - 1] += 1
@@ -38,12 +39,18 @@ class Grafo:
     
 
     def matriz_de_adjacencia(self): #Método para representação em Matriz de ajacência usando o método np.zeros.
+        
+        tempo_inicial = time.time()
         matriz = np.zeros((self.num_vertices,self.num_vertices), int) #inicializa a matriz com zeros.
         for aresta in self.arestas:  #percorre a lista de arestas.
-            x, y = aresta #atribui os valores de aresta a x e y.
+            print(aresta)
+            #x, y = aresta #atribui os valores de aresta a x e y.
+            x = aresta[0]
+            y = aresta[1]
             matriz[x-1][y-1] = 1
             matriz[y-1][x-1] = 1   #Assumindo que o grafo não é direcionado, atribui as ligações à matriz.
-        
+        t_final = time.time()
+        print (t_final - tempo_inicial)
         gc.collect()
         return matriz #retorna a matriz de adjacência.
     
@@ -72,6 +79,8 @@ class Grafo:
         
     def BFS(self, vertice_inicial, modo):
         gc.collect()
+        
+        
         self.CCs = set()
 
         if modo == 1:  # BFS usando matriz de adjacência para representação
@@ -231,20 +240,14 @@ class Grafo:
 
                 
                 
-                
-                #Versao antiga usando vetores numpy              
-               
-                # for v in vetor_adjacencia[u-1]: #Para cada vizinho v de u
-                #     P.push(v) #Adiciona v na pilha.
-                #     vetor_pais_e_niveis[v-1][0] = u #Define o pai de v como u.
-                #     vetor_pais_e_niveis[v-1][1] = vetor_pais_e_niveis[u-1][1] + 1 #Define o nível de v como o nível de u + 1.
-        
-       
+
 
     def distancia(self, vertice_inicial, vertice_final, modo): #Método para descobrir a distância entre dois vértices a partir da BFS (usa o vetor de adjacencia como reprentatividade)
         # Custo O(m+n) (custo da BFS)
         vetor_pais_e_niveis = self.BFS(vertice_inicial, modo) #Inicializa o vetor de pais e niveis
-        distancia = vetor_pais_e_niveis[vertice_final-1][1] #defie a distancia como o nível de explorados da BFS
+        distancia = vetor_pais_e_niveis[vertice_final-1][1] #define a distancia como o nível de explorados da BFS
+        del(vetor_pais_e_niveis)
+        
         return distancia
         
         
@@ -276,7 +279,7 @@ class Grafo:
             for linha in arquivo:
                 u, v = map(int, linha.split())
                 self.adicionar_aresta(u, v)
-                
+
 
     def escrever_informacoes(self, arquivo_saida):
         num_vertices, num_arestas, grau_minimo, grau_maximo, grau_medio, mediana = self.calcular_informacoes()
@@ -323,6 +326,14 @@ if __name__ == "__main__":
     meu_grafo = Grafo()
     meu_grafo.ler_grafo("grafo1.txt")
     meu_grafo.escrever_informacoes("informacoes.txt")
+    print("Tamanho em bytes do grafo:", sys.getsizeof(meu_grafo)) #o objeto grafo ocupa 48 bytes 
+          
+    
+    
+    print("Escolha a representação do grafo:")
+    print("1. Matriz de Adjacência")
+    print("2. Vetor de Adjacência")
+    escolha_representacao = int(input("Digite o número da opção desejada: "))
     
     # print(representacao)
     print('% de memória RAM usada:', psutil.virtual_memory()[2])   

@@ -1,5 +1,5 @@
 Número de vértices: 10000
-Número de arestas: 109977
+Número de arestas: 219954
 Grau mínimo: 8
 Grau máximo: 43
 Grau médio: 22.00
