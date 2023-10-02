@@ -1,4 +1,5 @@
 import gc as gc
+import psutil
 import numpy as np
 from bibliotecaFilaPilha import *
 
@@ -244,7 +245,7 @@ class Grafo:
 
     def escrever_informacoes(self, arquivo_saida):
         num_vertices, num_arestas, grau_minimo, grau_maximo, grau_medio, mediana = self.calcular_informacoes()
-
+        
         with open(arquivo_saida, 'w', encoding='utf-8') as arquivo:
             arquivo.write(f"Número de vértices: {num_vertices}\n")
             arquivo.write(f"Número de arestas: {num_arestas}\n")
@@ -272,6 +273,11 @@ if __name__ == "__main__":
     print("1. Matriz de Adjacência")
     print("2. Vetor de Adjacência")
     escolha_representacao = int(input("Digite o número da opção desejada: "))
+    
+    if escolha_representacao == 1:
+        print(meu_grafo.matriz_de_adjacencia())
+    elif escolha_representacao == 2:
+        print(meu_grafo.vetor_de_adjacencia())
     while True:
         exibir_menu()
         opcao = input("Digite o número da opção desejada: ")
