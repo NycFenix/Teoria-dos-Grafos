@@ -1,6 +1,7 @@
 import gc as gc
 import psutil
 import numpy as np
+np.set_printoptions(threshold=np.inf)
 from bibliotecaFilaPilha import *
 
 class Grafo:
@@ -267,7 +268,7 @@ def exibir_menu():
 
 if __name__ == "__main__":
     meu_grafo = Grafo()
-    meu_grafo.ler_grafo("entrada.txt")
+    meu_grafo.ler_grafo("teste.txt")
     meu_grafo.escrever_informacoes("informacoes.txt")
     print("Escolha a representação do grafo:")
     print("1. Matriz de Adjacência")

@@ -1,6 +1,6 @@
-Número de vértices: 6
-Número de arestas: 6
-Grau mínimo: 1
-Grau máximo: 4
-Grau médio: 2.00
-Mediana de grau: 2
+Número de vértices: 10000
+Número de arestas: 109977
+Grau mínimo: 8
+Grau máximo: 43
+Grau médio: 22.00
+Mediana de grau: 22
