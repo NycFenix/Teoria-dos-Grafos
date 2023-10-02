@@ -279,10 +279,25 @@ if __name__ == "__main__":
             meu_grafo.imprimir_informacoes()
         elif opcao == '2':
             vertice_inicial = int(input("Digite o vértice inicial para a BFS: "))
-            print(meu_grafo.BFS(vertice_inicial,escolha_representacao))
+            resultado = meu_grafo.BFS(vertice_inicial, escolha_representacao)
+            print("\nÁrvore de Busca em Largura (BFS):")
+            for v in range(meu_grafo.num_vertices):
+                if resultado[v][0] is not None:
+                    pai, nivel = resultado[v]
+                    print(f"Vértice {v+1}: Pai = {pai}, Nível = {nivel}")
+                else:
+                    print(f"Vértice {v+1} não foi alcançado pela BFS.")
         elif opcao == '3':
             vertice_inicial = int(input("Digite o vértice inicial para a DFS: "))
-            print(meu_grafo.DFS(vertice_inicial,escolha_representacao))
+            resultado  = meu_grafo.DFS(vertice_inicial,escolha_representacao)
+            # Adicione instruções de impressão aqui
+            print("\nÁrvore de Busca em Profundidade (DFS):")
+            for v in range(meu_grafo.num_vertices):
+                            if resultado[v][0] is not None:
+                                pai, nivel = resultado[v]
+                                print(f"Vértice {v+1}: Pai = {pai}, Nível = {nivel}")
+                            else:
+                                print(f"Vértice {v+1} não foi alcançado pela DFS.")
         elif opcao == '4':
             vertice_inicial = int(input("Digite o vértice inicial: "))
             vertice_final = int(input("Digite o vértice final: "))
