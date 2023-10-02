@@ -317,10 +317,11 @@ if __name__ == "__main__":
                                 else:
                                     print(f"Vértice {v+1} não foi alcançado pela DFS.")
         elif opcao == '4':
-            vertice_inicial = int(input("Digite o vértice inicial: "))
-            vertice_final = int(input("Digite o vértice final: "))
-            distancia = meu_grafo.distancia(vertice_inicial, vertice_final, escolha_representacao)
-            print(f"A distância entre {vertice_inicial} e {vertice_final} é {distancia}.")
+            if verificar_entrada(vertice_inicial):
+                vertice_inicial = int(input("Digite o vértice inicial: "))
+                vertice_final = int(input("Digite o vértice final: "))
+                distancia = meu_grafo.distancia(vertice_inicial, vertice_final, escolha_representacao)
+                print(f"A distância entre {vertice_inicial} e {vertice_final} é {distancia}.")
         elif opcao == '5':
             diametro = meu_grafo.diametro()
             print(f"O diâmetro do grafo é {diametro}.")
