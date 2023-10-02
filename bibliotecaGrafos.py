@@ -255,6 +255,12 @@ class Grafo:
             arquivo.write(f"Grau médio: {grau_medio:.2f}\n")
             arquivo.write(f"Mediana de grau: {mediana}\n")
 
+def verificar_entrada(vertice_inicial): # Verifica se o vértice inicial é válido
+    if vertice_inicial < 1 or vertice_inicial > meu_grafo.num_vertices:
+        print("Vértice inicial inválido! Tente novamente. O invervalo do grafo é de 1 até",meu_grafo.num_vertices)
+        return False
+    return True
+
 def exibir_menu():
     print("\nMenu de Opções:")
     print("1. Ler informacoes do Grafo")
@@ -290,25 +296,26 @@ if __name__ == "__main__":
             meu_grafo.imprimir_informacoes()
         elif opcao == '2':
             vertice_inicial = int(input("Digite o vértice inicial para a BFS: "))
-            resultado = meu_grafo.BFS(vertice_inicial, escolha_representacao)
-            print("Árvore de Busca em Largura (BFS):")
-            for v in range(meu_grafo.num_vertices):
-                if resultado[v][0] is not None:
-                    pai, nivel = resultado[v]
-                    print(f"Vértice {v+1}: Pai = {pai}, Nível = {nivel}")
-                else:
-                    print(f"Vértice {v+1} não foi alcançado pela BFS.")
+            if verificar_entrada(vertice_inicial):
+                resultado = meu_grafo.BFS(vertice_inicial, escolha_representacao)
+                print("Árvore de Busca em Largura (BFS):")
+                for v in range(meu_grafo.num_vertices):
+                    if resultado[v][0] is not None:
+                        pai, nivel = resultado[v]
+                        print(f"Vértice {v+1}: Pai = {pai}, Nível = {nivel}")
+                    else:
+                        print(f"Vértice {v+1} não foi alcançado pela BFS.")
         elif opcao == '3':
             vertice_inicial = int(input("Digite o vértice inicial para a DFS: "))
-            resultado  = meu_grafo.DFS(vertice_inicial,escolha_representacao)
-            # Adicione instruções de impressão aqui
-            print("Árvore de Busca em Profundidade (DFS):")
-            for v in range(meu_grafo.num_vertices):
-                            if resultado[v][0] is not None:
-                                pai, nivel = resultado[v]
-                                print(f"Vértice {v+1}: Pai = {pai}, Nível = {nivel}")
-                            else:
-                                print(f"Vértice {v+1} não foi alcançado pela DFS.")
+            if verificar_entrada(vertice_inicial):
+                resultado  = meu_grafo.DFS(vertice_inicial,escolha_representacao)
+                print("Árvore de Busca em Profundidade (DFS):")
+                for v in range(meu_grafo.num_vertices):
+                                if resultado[v][0] is not None:
+                                    pai, nivel = resultado[v]
+                                    print(f"Vértice {v+1}: Pai = {pai}, Nível = {nivel}")
+                                else:
+                                    print(f"Vértice {v+1} não foi alcançado pela DFS.")
         elif opcao == '4':
             vertice_inicial = int(input("Digite o vértice inicial: "))
             vertice_final = int(input("Digite o vértice final: "))
