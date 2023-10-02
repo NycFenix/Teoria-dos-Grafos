@@ -243,7 +243,9 @@ if __name__ == "__main__":
             print(meu_grafo.diametro())
             
         elif opcao == '6':
-            meu_grafo.componentes_conexas()
+            print(meu_grafo.componentes_conexas())
+            
+        
         elif opcao == '7':
             print("Encerrando o programa.")
             break
