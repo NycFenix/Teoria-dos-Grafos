@@ -278,6 +278,9 @@ if __name__ == "__main__":
         print(meu_grafo.matriz_de_adjacencia())
     elif escolha_representacao == 2:
         print(meu_grafo.vetor_de_adjacencia())
+     
+    print('% de memória RAM usada:', psutil.virtual_memory()[2])   
+    print("Memória em GB: ", psutil.virtual_memory()[3] / 1000000000)
     while True:
         exibir_menu()
         opcao = input("Digite o número da opção desejada: ")
