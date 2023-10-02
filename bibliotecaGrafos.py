@@ -70,6 +70,7 @@ class Grafo:
         
     def BFS(self, vertice_inicial, modo): 
         self.CCs = set()
+
         if modo == 1: # BFS usando matriz de adjacência para representação
             matriz_adjacencia = self.matriz_de_adjacencia()
             vetor_marcacao = np.zeros(self.num_vertices, dtype=int)  # Inicializa a lista de marcação com zeros (desmarca todos os vértices).
@@ -122,7 +123,7 @@ class Grafo:
                         vetor_pais_e_niveis[valor_vizinho-1][0] = v #Define o pai de nodo atual como v.
                         vetor_pais_e_niveis[valor_vizinho-1][1] = vetor_pais_e_niveis[v-1][1] + 1 #Define o nível de nodo atual como o nível de v + 1.
                     vizinho_atual = vizinho_atual.next #Passa para o próximo vizinho de v.   
-                      
+
                 with open("BFS_vetor_adjacencia", 'w', encoding='utf-8') as arquivo:
                                         arquivo.write("Árvore de Busca em Largura (BFS) usando Vetor de Adjacência:\n")
                                         for v in range(self.num_vertices):
@@ -133,6 +134,34 @@ class Grafo:
     
     def DFS(self, vertice_inicial, modo): 
         self.CCs = set()
+
+        if modo == 1:  # DFS usando matriz de adjacência para representação
+            matriz_adjacencia = self.matriz_de_adjacencia()
+            vetor_marcacao = np.zeros(self.num_vertices, dtype=int)  # Inicializa a lista de marcação com zeros (desmarca todos os vértices).
+            vetor_pais_e_niveis = np.full((self.num_vertices, 2), np.array([None, None]))  # Inicializa o vetor de pais e níveis com None. O formato do vetor apresenta vetores internos com [pai, nível] de cada vértice.
+            vetor_pais_e_niveis[vertice_inicial - 1][1] = 0  # Define o nível da raiz como 0.
+            P = Pilha()  # Define a pilha de explorados vazia
+            vetor_marcacao[vertice_inicial - 1] = 1  # Marca o vértice inicial
+            P.push(vertice_inicial)  # Adiciona o vértice inicial na pilha.
+
+            while not P.isEmpty():
+                v = P.pop()  # Remove o primeiro elemento da pilha e atribui a v.
+                for w in range(self.num_vertices):
+                    if matriz_adjacencia[v - 1][w] == 1 and vetor_marcacao[w] == 0:
+                        vetor_marcacao[w] = 1  # Marca w
+                        P.push(w + 1)  # Adiciona w na pilha.
+                        vetor_pais_e_niveis[w][0] = v  # Define o pai de w como v.
+                        vetor_pais_e_niveis[w][1] = vetor_pais_e_niveis[v - 1][1] + 1  # Define o nível de w como o nível de v + 1.
+
+            with open("DFS_matriz_adjacencia", 'w', encoding='utf-8') as arquivo:
+                arquivo.write("Árvore de Busca em Profundidade (DFS) usando Matriz de Adjacência:\n")
+                for v in range(self.num_vertices):
+                    if vetor_pais_e_niveis[v][0] is not None:
+                        arquivo.write(f"Vértice {v+1}: Pai = {vetor_pais_e_niveis[v][0]}, Nível = {vetor_pais_e_niveis[v][1]}\n")
+
+            return vetor_pais_e_niveis  # Retorna o vetor de pais e níveis.
+        
+
         if modo == 2: #DFS usando o vetor de adjacencia para representação. Retorna a lista de pais e níveis no formato [pai, nível].
             vetor_marcacao = np.zeros(self.num_vertices, dtype= int)
             vetor_adjacencia = self.vetor_de_adjacencia() #Inicializa vetor de adjacencia
@@ -158,6 +187,13 @@ class Grafo:
                         vetor_pais_e_niveis[valor_vizinho-1][1] = vetor_pais_e_niveis[u-1][1] + 1 #Define o nível de nodo atual como o nível de u + 1.
 
                     vizinho_atual = vizinho_atual.next #Avanca para o proximo vizinho de u
+                    
+                with open("DFS_vetor_adjacencia", 'w', encoding='utf-8') as arquivo:
+                                arquivo.write("Árvore de Busca em Profundidade (DFS) usando Vetor de Adjacência:\n")
+                                for v in range(self.num_vertices):
+                                    if vetor_pais_e_niveis[v][0] is not None:
+                                        arquivo.write(f"Vértice {v + 1}: Pai = {vetor_pais_e_niveis[v][0]}, Nível = {vetor_pais_e_niveis[v][1]}\n")
+
                         
             return vetor_pais_e_niveis
                 
