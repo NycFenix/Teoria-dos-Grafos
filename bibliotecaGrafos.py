@@ -43,7 +43,8 @@ class Grafo:
             x, y = aresta #atribui os valores de aresta a x e y.
             matriz[x-1][y-1] = 1
             matriz[y-1][x-1] = 1   #Assumindo que o grafo não é direcionado, atribui as ligações à matriz.
-            
+        
+        gc.collect()
         return matriz #retorna a matriz de adjacência.
     
     def vetor_de_adjacencia(self): #Método para representação em Lista de adjacência.
@@ -54,7 +55,7 @@ class Grafo:
             g, h = aresta
             vetor[g-1].uniao(h)
             vetor[h-1].uniao(g)
-                    
+        gc.collect()    
         return vetor
     
     def imprimir_informacoes(self):
@@ -70,6 +71,7 @@ class Grafo:
                 
         
     def BFS(self, vertice_inicial, modo): 
+        gc.collect()
         self.CCs = set()
 
         if modo == 1: # BFS usando matriz de adjacência para representação
@@ -96,9 +98,9 @@ class Grafo:
                         for v in range(self.num_vertices):
                             if vetor_pais_e_niveis[v][0] is not None:
                                 arquivo.write(f"Vértice {v+1}: Pai = {vetor_pais_e_niveis[v][0]}, Nível = {vetor_pais_e_niveis[v][1]}\n")
-            return vetor_pais_e_niveis  # Retorna o vetor de pais e níveis.                        
+                
             
-            return vetor_pais_e_niveis  # Retorna o vetor de pais e níveis.
+            return vetor_pais_e_niveis  # Retorna o vetor de pais e níveis.                        
         
         if modo == 2: #BFS usando o vetor de adjacencia para representação (custo de O(m+n))
             self.vetor_marcacao = np.zeros(self.num_vertices, dtype= int) #inicializa a lista de marcação com zeros (desmarca todos os vértices).
@@ -134,6 +136,7 @@ class Grafo:
             return vetor_pais_e_niveis #retorna o vetor de pais e níveis.
     
     def DFS(self, vertice_inicial, modo): 
+        gc.collect()
         self.CCs = set()
 
         if modo == 1:  # DFS usando matriz de adjacência para representação
@@ -227,6 +230,7 @@ class Grafo:
         return diametro        
 
     def componentes_conexas(self):
+        gc.collect()
         componentes_conexas = np.array([])
         self.vetor_marcacao = np.zeros(self.num_vertices)
         for v in range(1, self.num_vertices):
