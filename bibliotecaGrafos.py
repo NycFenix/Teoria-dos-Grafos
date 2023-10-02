@@ -7,7 +7,7 @@ from bibliotecaFilaPilha import *
 class Grafo:
     def __init__(self):
         self.vertices = set()
-        self.arestas = []
+        self.arestas = np.empty((0, 2), int)
         self.num_vertices = 0
         self.CCs = set()
         self.vetor_marcacao = np.array([])
@@ -15,13 +15,13 @@ class Grafo:
     def adicionar_aresta(self, u, v):
         self.vertices.add(u)
         self.vertices.add(v)
-        self.arestas.append((u, v))
+        self.arestas = np.concatenate((self.arestas, np.array([[u, v]])))
 
     def calcular_informacoes(self):
         self.num_vertices = len(self.vertices)
-        num_arestas = len(self.arestas)
+        num_arestas = self.arestas.size
         graus = [0] * self.num_vertices
-
+        
         for u, v in self.arestas:
             graus[u - 1] += 1
             graus[v - 1] += 1
