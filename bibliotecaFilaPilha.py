@@ -94,3 +94,11 @@ class Fila:
                 return True
             current = current.next
         return False
+    
+# fila = Fila()
+# fila.enqueue(6923)
+# fila.enqueue(100)
+# fila.enqueue(99)
+# fila.enqueue(8)
+# print(fila.head.valor)
+# print(fila)

@@ -7,8 +7,8 @@ class Grafo:
         self.vertices = set()
         self.arestas = []
         self.num_vertices = 0
-        self.vetor_marcacao = np.array([])
-        self.componente_conexa = set()
+        self.CCs = set()
+
     def adicionar_aresta(self, u, v):
         self.vertices.add(u)
         self.vertices.add(v)
@@ -32,7 +32,9 @@ class Grafo:
 
         return self.num_vertices, num_arestas, grau_minimo, grau_maximo, grau_medio, mediana
 
-   
+    def componentes_conexas(self):
+        # Implementar aqui o algoritmo BFS ou DFS para encontrar as componentes conexas.
+        pass
 
     def matriz_de_adjacencia(self): #Método para representação em Matriz de ajacência usando o método np.zeros.
         matriz = np.zeros((self.num_vertices,self.num_vertices), int) #inicializa a matriz com zeros.
@@ -66,65 +68,86 @@ class Grafo:
         print(f"Mediana de grau: {mediana}")            
                 
         
-    def BFS(self, vertice_inicial): #BFS usando o vetor de adjacencia para representação (custo de O(m+n))
-        self.componente_conexa = set() #Zera o conjunto de vertices da componente conexa
-        self.vetor_marcacao = np.zeros(self.num_vertices, dtype= int) #inicializa a lista de marcação com zeros (desmarca todos os vértices).
-       
-        vetor_pais_e_niveis = np.full((self.num_vertices,2),np.array([None, None])) #inicializa o vetor de pais e níveis com None. O formato do vetor apresenta vetores internos com [pai, nível] de cada vértice.
-         
-        vetor_pais_e_niveis[vertice_inicial -1][1] = 0 #Define o nível da raiz como 0. 
-        Q = Fila() #Define a fila de explorados vazia
-        self.vetor_marcacao[vertice_inicial -1] = 1 #Marca o vértice inicial #Marca o vértice inicial
-        Q.enqueue(vertice_inicial) #Adiciona o vértice inicial na fila. #Adiciona o vértice inicial na raiz
-        self.componente_conexa.add(vertice_inicial)
-        vetor_adjacencia = self.vetor_de_adjacencia()
+    def BFS(self, vertice_inicial, modo): 
+        self.CCs = set()
+        if modo == 1: # BFS usando matriz de adjacência para representação
+            matriz_adjacencia = self.matriz_de_adjacencia()
+            vetor_marcacao = np.zeros(self.num_vertices, dtype=int)  # Inicializa a lista de marcação com zeros (desmarca todos os vértices).
+            vetor_pais_e_niveis = np.full((self.num_vertices, 2), np.array([None, None]))  # Inicializa o vetor de pais e níveis com None. O formato do vetor apresenta vetores internos com [pai, nível] de cada vértice.
+            vetor_pais_e_niveis[vertice_inicial - 1][1] = 0  # Define o nível da raiz como 0.
+            Q = Fila()  # Define a fila de explorados vazia
+            vetor_marcacao[vertice_inicial - 1] = 1  # Marca o vértice inicial
+            Q.enqueue(vertice_inicial)  # Adiciona o vértice inicial na fila.
+            self.CCs.add(vertice_inicial)
+            while not Q.isEmpty():
+                v = Q.dequeue()  # Remove o primeiro elemento da fila e atribui a v.
+                for w in range(self.num_vertices):
+                    if matriz_adjacencia[v - 1][w] == 1 and vetor_marcacao[w] == 0:
+                        vetor_marcacao[w] = 1  # Marca w
+                        self.CCs.add(w)
+                        Q.enqueue(w + 1)  # Adiciona w na fila.
+                        vetor_pais_e_niveis[w][0] = v  # Define o pai de w como v.
+                        vetor_pais_e_niveis[w][1] = vetor_pais_e_niveis[v - 1][1] + 1  # Define o nível de w como o nível de v + 1.
+            
+            return vetor_pais_e_niveis  # Retorna o vetor de pais e níveis.
         
-        while Q.isEmpty() != True:
-            v = Q.dequeue() #Remove o primeiro elemento da fila e atribui a v.
-            vizinho_atual = vetor_adjacencia[v-1].head #Atribui o primeiro vizinho de v a vizinho_atual.
-            while vizinho_atual: #Percorre os vizinhos de v
-                valor_vizinho = vizinho_atual.valor #Atribui o valor numérico do vizinho atual a valor_vizinho
-                if self.vetor_marcacao[valor_vizinho-1] == 0: #Se nodo atual nao estiver marcado...
-                    self.vetor_marcacao[valor_vizinho-1] = 1 #... marca nodo atual 
-                    self.componente_conexa.add(valor_vizinho) #Adiciona no conjunto de vertices da componente conexa
-                    Q.enqueue(valor_vizinho) #Adiciona vizinho atual na fila
-                    vetor_pais_e_niveis[valor_vizinho-1][0] = v #Define o pai de nodo atual como v.
-                    vetor_pais_e_niveis[valor_vizinho-1][1] = vetor_pais_e_niveis[v-1][1] + 1 #Define o nível de nodo atual como o nível de v + 1.
-                vizinho_atual = vizinho_atual.next #Passa para o próximo vizinho de v.     
+        if modo == 2: #BFS usando o vetor de adjacencia para representação (custo de O(m+n))
+            vetor_marcacao = np.zeros(self.num_vertices, dtype= int) #inicializa a lista de marcação com zeros (desmarca todos os vértices).
+        
+            vetor_pais_e_niveis = np.full((self.num_vertices,2),np.array([None, None])) #inicializa o vetor de pais e níveis com None. O formato do vetor apresenta vetores internos com [pai, nível] de cada vértice.
+            
+            vetor_pais_e_niveis[vertice_inicial -1][1] = 0 #Define o nível da raiz como 0. 
+            Q = Fila() #Define a fila de explorados vazia
+            vetor_marcacao[vertice_inicial -1] = 1 #Marca o vértice inicial #Marca o vértice inicial
+            Q.enqueue(vertice_inicial) #Adiciona o vértice inicial na fila. #Adiciona o vértice inicial na raiz
+            self.CCs.add(vertice_inicial)
+            vetor_adjacencia = self.vetor_de_adjacencia()
+            
+            while Q.isEmpty() != True:
+                v = Q.dequeue() #Remove o primeiro elemento da fila e atribui a v.
+                vizinho_atual = vetor_adjacencia[v-1].head #Atribui o primeiro vizinho de v a vizinho_atual.
+                while vizinho_atual: #Percorre os vizinhos de v
+                    valor_vizinho = vizinho_atual.valor #Atribui o valor numérico do vizinho atual a valor_vizinho
+                    if vetor_marcacao[valor_vizinho-1] == 0: #Se nodo atual nao estiver marcado...
+                        vetor_marcacao[valor_vizinho-1] = 1 #... marca nodo atual
+                        self.CCs.add(valor_vizinho)
+                        Q.enqueue(valor_vizinho) #Adiciona vizinho atual na fila
+                        vetor_pais_e_niveis[valor_vizinho-1][0] = v #Define o pai de nodo atual como v.
+                        vetor_pais_e_niveis[valor_vizinho-1][1] = vetor_pais_e_niveis[v-1][1] + 1 #Define o nível de nodo atual como o nível de v + 1.
+                    vizinho_atual = vizinho_atual.next #Passa para o próximo vizinho de v.     
 
-        gc.collect()       
-        return vetor_pais_e_niveis #retorna o vetor de pais e níveis.
+                        
+            return vetor_pais_e_niveis #retorna o vetor de pais e níveis.
     
-    def DFS(self, vertice_inicial): #DFS usando o vetor de adjacencia para representação. Retorna a lista de pais e níveis no formato [pai, nível].
-        self.componente_conexa = set() #Zera o conjunto de vertices da componente conexa
-        self.vetor_marcacao = np.zeros(self.num_vertices, dtype= int)
-        vetor_adjacencia = self.vetor_de_adjacencia() #Inicializa vetor de adjacencia
-        
-        vetor_pais_e_niveis = np.full((self.num_vertices,2),np.array([None, None])) #inicializa o vetor de pais e níveis com None. O formato do vetor apresenta vetores internos com [pai, nível] de cada vértice.
-        vetor_pais_e_niveis[vertice_inicial -1][1] = 0 #Define o nível da raiz como 0. 
-        self.vetor_marcacao[vertice_inicial -1] = 1 
-        
-        P = Pilha() #Define a pilha de explorados vazia
-        P.push(vertice_inicial) #Adiciona o vértice inicial na pilha.
-        self.componente_conexa.add(vertice_inicial)
-        while P.isEmpty() != True: #Enquanto a pilha não estiver vazia...
-            u = P.pop() #Remove o primeiro elemento da pilha e atribui a u.
-            vizinho_atual = vetor_adjacencia[u-1].head
-        
-            while vizinho_atual: #Percorre os vizinhos de u
-                valor_vizinho = vizinho_atual.valor
-                if self.vetor_marcacao[valor_vizinho-1] == 0: #Se u não estiver marcado...
-                    self.vetor_marcacao[valor_vizinho-1] = 1 #... marca u
-                    self.componente_conexa.add(valor_vizinho) #Adiciona no conjunto de vertices da componente conexa
-                    P.push(valor_vizinho)
-                    vetor_pais_e_niveis[valor_vizinho-1][0] = u #Define o pai de nodo atual como u.
-                    vetor_pais_e_niveis[valor_vizinho-1][1] = vetor_pais_e_niveis[u-1][1] + 1 #Define o nível de nodo atual como o nível de u + 1.
+    def DFS(self, vertice_inicial, modo): 
+        self.CCs = set()
+        if modo == 2: #DFS usando o vetor de adjacencia para representação. Retorna a lista de pais e níveis no formato [pai, nível].
+            vetor_marcacao = np.zeros(self.num_vertices, dtype= int)
+            vetor_adjacencia = self.vetor_de_adjacencia() #Inicializa vetor de adjacencia
+            
+            vetor_pais_e_niveis = np.full((self.num_vertices,2),np.array([None, None])) #inicializa o vetor de pais e níveis com None. O formato do vetor apresenta vetores internos com [pai, nível] de cada vértice.
+            vetor_pais_e_niveis[vertice_inicial -1][1] = 0 #Define o nível da raiz como 0. 
+            vetor_marcacao[vertice_inicial -1] = 1 
+            
+            P = Pilha() #Define a pilha de explorados vazia
+            P.push(vertice_inicial) #Adiciona o vértice inicial na pilha.
+            self.CCs.add(vertice_inicial)
+            while P.isEmpty() != True: #Enquanto a pilha não estiver vazia...
+                u = P.pop() #Remove o primeiro elemento da pilha e atribui a u.
+                vizinho_atual = vetor_adjacencia[u-1].head
+            
+                while vizinho_atual: #Percorre os vizinhos de u
+                    valor_vizinho = vizinho_atual.valor
+                    if vetor_marcacao[valor_vizinho-1] == 0: #Se u não estiver marcado...
+                        vetor_marcacao[valor_vizinho-1] = 1 #... marca u
+                        
+                        P.push(valor_vizinho)
+                        vetor_pais_e_niveis[valor_vizinho-1][0] = u #Define o pai de nodo atual como u.
+                        vetor_pais_e_niveis[valor_vizinho-1][1] = vetor_pais_e_niveis[u-1][1] + 1 #Define o nível de nodo atual como o nível de u + 1.
 
-                vizinho_atual = vizinho_atual.next #Avanca para o proximo vizinho de u
-        print(self.vetor_marcacao)
-        
-        gc.collect()
-        return vetor_pais_e_niveis
+                    vizinho_atual = vizinho_atual.next #Avanca para o proximo vizinho de u
+                        
+            return vetor_pais_e_niveis
                 
                 
                 
@@ -153,6 +176,17 @@ class Grafo:
             if distancia > diametro: 
                 diametro = distancia
         return diametro        
+    
+    def componentes_conexas(self):
+        componentes_conexas = np.array([])
+        self.vetor_marcacao = np.zeros(self.num_vertices)
+        for v in range(1, self.num_vertices):
+            if self.vetor_marcacao[v-1] == 0: #Se não estiver marcado
+                self.BFS(v)
+                componentes_conexas = np.concatenate((componentes_conexas, np.array([self.CCs])), axis = 0)
+                
+        return componentes_conexas
+            
             
     def ler_grafo(self, arquivo_entrada):
         with open(arquivo_entrada, 'r') as arquivo:
@@ -171,42 +205,49 @@ class Grafo:
             arquivo.write(f"Grau máximo: {grau_maximo}\n")
             arquivo.write(f"Grau médio: {grau_medio:.2f}\n")
             arquivo.write(f"Mediana de grau: {mediana}\n")
-     
-    def componentes_conexas(self):
-        componentes_conexas = np.array([])
-        self.vetor_marcacao = np.zeros(self.num_vertices)
-        for v in range(1, self.num_vertices):
-            if self.vetor_marcacao[v-1] == 0: #Se não estiver marcado
-                self.BFS(v)
-                componentes_conexas = np.concatenate((componentes_conexas, np.array([self.componente_conexa])), axis = 0)
-                
-        return componentes_conexas
-            
-        
-        
-        
-                    
-                    
 
-        
+def exibir_menu():
+    print("\nMenu de Opções:")
+    print("1. Ler informacoes do Grafo")
+    print("2. Percorrer o grafo utilizando Busca em Largura (BFS)")
+    print("3. Percorrer o grafo utilizando Busca em Profundidade (DFS)")
+    print("4. Determinar distância entre dois vértices do grafo")
+    print("5. Calcular Diâmetro do Grafo")
+    print("6. Descobrir Componentes Conexas do grafo")
+    print("7. Sair")   
 
 
 if __name__ == "__main__":
-        
-        
-        
     meu_grafo = Grafo()
     meu_grafo.ler_grafo("entrada.txt")
     meu_grafo.escrever_informacoes("informacoes.txt")
-    # m_j = meu_grafo.matriz_de_adjacencia()# Teste da matriz de adjacencia 
-    # print(m_j)  
-    # v_j = meu_grafo.vetor_de_adjacencia() #Teste do vetor de adjacencia4
-    # print(v_j)
-    #vetorBFS = meu_grafo.BFS(1) #Teste da BFS
-    vetorDFS = meu_grafo.DFS(1) #Teste da DFS
-    print(meu_grafo.componentes_conexas())
-    # print(meu_grafo.arestas)
-    # print(meu_grafo.vertices)
-    # print(meu_grafo.num_vertices)
+    print("Escolha a representação do grafo:")
+    print("1. Matriz de Adjacência")
+    print("2. Vetor de Adjacência")
+    escolha_representacao = int(input("Digite o número da opção desejada: "))
+    while True:
+        exibir_menu()
+        opcao = input("Digite o número da opção desejada: ")
+        if opcao == '1':
+            meu_grafo.imprimir_informacoes()
+        elif opcao == '2':
+            vertice_inicial = int(input("Digite o vértice inicial para a BFS: "))
+            print(meu_grafo.BFS(vertice_inicial,escolha_representacao))
+        elif opcao == '3':
+            vertice_inicial = int(input("Digite o vértice inicial para a DFS: "))
+            print(meu_grafo.DFS(vertice_inicial,escolha_representacao))
+        elif opcao == '4':
+            vertice_inicial = int(input("Digite o vértice inicial: "))
+            vertice_final = int(input("Digite o vértice final: "))
+            meu_grafo.distancia(vertice_inicial, vertice_final, escolha_representacao)
+        elif opcao == '5':
+            meu_grafo.diametro()
+        elif opcao == '6':
+            meu_grafo.componentes_conexas()
+        elif opcao == '7':
+            print("Encerrando o programa.")
+            break
+        else:
+            print("Opção inválida. Tente novamente.")
 
 
