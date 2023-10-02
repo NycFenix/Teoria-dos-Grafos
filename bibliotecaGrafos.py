@@ -247,6 +247,7 @@ class Grafo:
             for linha in arquivo:
                 u, v = map(int, linha.split())
                 self.adicionar_aresta(u, v)
+                
 
     def escrever_informacoes(self, arquivo_saida):
         num_vertices, num_arestas, grau_minimo, grau_maximo, grau_medio, mediana = self.calcular_informacoes()
@@ -258,6 +259,8 @@ class Grafo:
             arquivo.write(f"Grau máximo: {grau_maximo}\n")
             arquivo.write(f"Grau médio: {grau_medio:.2f}\n")
             arquivo.write(f"Mediana de grau: {mediana}\n")
+        
+        del(num_vertices, num_arestas, grau_minimo, grau_maximo, grau_medio, mediana)
 
 def verificar_entrada(vertice_inicial): # Verifica se o vértice inicial é válido
     if vertice_inicial < 1 or vertice_inicial > meu_grafo.num_vertices:
@@ -278,7 +281,7 @@ def exibir_menu():
 
 if __name__ == "__main__":
     meu_grafo = Grafo()
-    meu_grafo.ler_grafo("teste.txt")
+    meu_grafo.ler_grafo("grafo1.txt")
     meu_grafo.escrever_informacoes("informacoes.txt")
     print("Escolha a representação do grafo:")
     print("1. Matriz de Adjacência")
@@ -286,12 +289,16 @@ if __name__ == "__main__":
     escolha_representacao = int(input("Digite o número da opção desejada: "))
     
     if escolha_representacao == 1:
-        print(meu_grafo.matriz_de_adjacencia())
+        representacao = meu_grafo.matriz_de_adjacencia()
+        
     elif escolha_representacao == 2:
-        print(meu_grafo.vetor_de_adjacencia())
-     
+        representacao = meu_grafo.vetor_de_adjacencia()
+    print(representacao)
     print('% de memória RAM usada:', psutil.virtual_memory()[2])   
     print("Memória em GB: ", psutil.virtual_memory()[3] / 1000000000)
+    
+    del(representacao)
+    
     while True:
         exibir_menu()
         opcao = input("Digite o número da opção desejada: ")
@@ -309,6 +316,7 @@ if __name__ == "__main__":
                         print(f"Vértice {v+1}: Pai = {pai}, Nível = {nivel}")
                     else:
                         print(f"Vértice {v+1} não foi alcançado pela BFS.")
+                        
         elif opcao == '3':
             vertice_inicial = int(input("Digite o vértice inicial para a DFS: "))
             if verificar_entrada(vertice_inicial):
@@ -320,18 +328,24 @@ if __name__ == "__main__":
                                     print(f"Vértice {v+1}: Pai = {pai}, Nível = {nivel}")
                                 else:
                                     print(f"Vértice {v+1} não foi alcançado pela DFS.")
+            
+            del(resultado)
         elif opcao == '4':
             if verificar_entrada(vertice_inicial):
                 vertice_inicial = int(input("Digite o vértice inicial: "))
                 vertice_final = int(input("Digite o vértice final: "))
                 distancia = meu_grafo.distancia(vertice_inicial, vertice_final, escolha_representacao)
                 print(f"A distância entre {vertice_inicial} e {vertice_final} é {distancia}.")
+                
+                del(vertice_inicial, vertice_final, distancia)
         elif opcao == '5':
             diametro = meu_grafo.diametro()
             print(f"O diâmetro do grafo é {diametro}.")
+            del(diametro)
         elif opcao == '6':
             resultado = meu_grafo.componentes_conexas()
             print("Componentes conexas do grafo:",resultado)
+            del(resultado)
         elif opcao == '7':
             print("Encerrando o programa.")
             break
