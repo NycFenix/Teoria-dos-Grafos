@@ -87,13 +87,16 @@ class Grafo:
                         vetor_pais_e_niveis[w][0] = v  # Define o pai de w como v.
                         vetor_pais_e_niveis[w][1] = vetor_pais_e_niveis[v - 1][1] + 1  # Define o nível de w como o nível de v + 1.
             
+            with open("BFS_matriz_adjacencia", 'w', encoding='utf-8') as arquivo:
+                        arquivo.write("Árvore de Busca em Largura (BFS):\n")
+                        for v in range(self.num_vertices):
+                            if vetor_pais_e_niveis[v][0] is not None:
+                                arquivo.write(f"Vértice {v+1}: Pai = {vetor_pais_e_niveis[v][0]}, Nível = {vetor_pais_e_niveis[v][1]}\n")
             return vetor_pais_e_niveis  # Retorna o vetor de pais e níveis.
         
         if modo == 2: #BFS usando o vetor de adjacencia para representação (custo de O(m+n))
             vetor_marcacao = np.zeros(self.num_vertices, dtype= int) #inicializa a lista de marcação com zeros (desmarca todos os vértices).
-        
             vetor_pais_e_niveis = np.full((self.num_vertices,2),np.array([None, None])) #inicializa o vetor de pais e níveis com None. O formato do vetor apresenta vetores internos com [pai, nível] de cada vértice.
-            
             vetor_pais_e_niveis[vertice_inicial -1][1] = 0 #Define o nível da raiz como 0. 
             Q = Fila() #Define a fila de explorados vazia
             vetor_marcacao[vertice_inicial -1] = 1 #Marca o vértice inicial #Marca o vértice inicial
@@ -103,6 +106,7 @@ class Grafo:
             while Q.isEmpty() != True:
                 v = Q.dequeue() #Remove o primeiro elemento da fila e atribui a v.
                 vizinho_atual = vetor_adjacencia[v-1].head #Atribui o primeiro vizinho de v a vizinho_atual.
+                
                 while vizinho_atual: #Percorre os vizinhos de v
                     valor_vizinho = vizinho_atual.valor #Atribui o valor numérico do vizinho atual a valor_vizinho
                     if vetor_marcacao[valor_vizinho-1] == 0: #Se nodo atual nao estiver marcado...
@@ -110,39 +114,75 @@ class Grafo:
                         Q.enqueue(valor_vizinho) #Adiciona vizinho atual na fila
                         vetor_pais_e_niveis[valor_vizinho-1][0] = v #Define o pai de nodo atual como v.
                         vetor_pais_e_niveis[valor_vizinho-1][1] = vetor_pais_e_niveis[v-1][1] + 1 #Define o nível de nodo atual como o nível de v + 1.
-                    vizinho_atual = vizinho_atual.next #Passa para o próximo vizinho de v.     
+                    vizinho_atual = vizinho_atual.next #Passa para o próximo vizinho de v.  
+                    
+                with open("BFS_vetor_adjacencia", 'w', encoding='utf-8') as arquivo:
+                        arquivo.write("Árvore de Busca em Largura (BFS) usando Vetor de Adjacência:\n")
+                        for v in range(self.num_vertices):
+                            if vetor_pais_e_niveis[v][0] is not None:
+                                arquivo.write(f"Vértice {v+1}: Pai = {vetor_pais_e_niveis[v][0]}, Nível = {vetor_pais_e_niveis[v][1]}\n")       
 
                         
             return vetor_pais_e_niveis #retorna o vetor de pais e níveis.
+            
     
-    def DFS(self, vertice_inicial, modo): 
-        
-        if modo == 2: #DFS usando o vetor de adjacencia para representação. Retorna a lista de pais e níveis no formato [pai, nível].
-            vetor_marcacao = np.zeros(self.num_vertices, dtype= int)
-            vetor_adjacencia = self.vetor_de_adjacencia() #Inicializa vetor de adjacencia
-            
-            vetor_pais_e_niveis = np.full((self.num_vertices,2),np.array([None, None])) #inicializa o vetor de pais e níveis com None. O formato do vetor apresenta vetores internos com [pai, nível] de cada vértice.
-            vetor_pais_e_niveis[vertice_inicial -1][1] = 0 #Define o nível da raiz como 0. 
-            vetor_marcacao[vertice_inicial -1] = 1 
-            
-            P = Pilha() #Define a pilha de explorados vazia
-            P.push(vertice_inicial) #Adiciona o vértice inicial na pilha.
-            
-            while P.isEmpty() != True: #Enquanto a pilha não estiver vazia...
-                u = P.pop() #Remove o primeiro elemento da pilha e atribui a u.
-                vizinho_atual = vetor_adjacencia[u-1].head
-            
-                while vizinho_atual: #Percorre os vizinhos de u
-                    valor_vizinho = vizinho_atual.valor
-                    if vetor_marcacao[valor_vizinho-1] == 0: #Se u não estiver marcado...
-                        vetor_marcacao[valor_vizinho-1] = 1 #... marca u
-                        P.push(valor_vizinho)
-                        vetor_pais_e_niveis[valor_vizinho-1][0] = u #Define o pai de nodo atual como u.
-                        vetor_pais_e_niveis[valor_vizinho-1][1] = vetor_pais_e_niveis[u-1][1] + 1 #Define o nível de nodo atual como o nível de u + 1.
+    def DFS(self, vertice_inicial, modo):
+        if modo == 1:  # DFS usando matriz de adjacência para representação
+            matriz_adjacencia = self.matriz_de_adjacencia()
+            vetor_marcacao = np.zeros(self.num_vertices, dtype=int)  # Inicializa a lista de marcação com zeros (desmarca todos os vértices).
+            vetor_pais_e_niveis = np.full((self.num_vertices, 2), np.array([None, None]))  # Inicializa o vetor de pais e níveis com None. O formato do vetor apresenta vetores internos com [pai, nível] de cada vértice.
+            vetor_pais_e_niveis[vertice_inicial - 1][1] = 0  # Define o nível da raiz como 0.
+            P = Pilha()  # Define a pilha de explorados vazia
+            vetor_marcacao[vertice_inicial - 1] = 1  # Marca o vértice inicial
+            P.push(vertice_inicial)  # Adiciona o vértice inicial na pilha.
 
-                    vizinho_atual = vizinho_atual.next #Avanca para o proximo vizinho de u
-                        
-            return vetor_pais_e_niveis
+            while not P.isEmpty():
+                v = P.pop()  # Remove o primeiro elemento da pilha e atribui a v.
+                for w in range(self.num_vertices):
+                    if matriz_adjacencia[v - 1][w] == 1 and vetor_marcacao[w] == 0:
+                        vetor_marcacao[w] = 1  # Marca w
+                        P.push(w + 1)  # Adiciona w na pilha.
+                        vetor_pais_e_niveis[w][0] = v  # Define o pai de w como v.
+                        vetor_pais_e_niveis[w][1] = vetor_pais_e_niveis[v - 1][1] + 1  # Define o nível de w como o nível de v + 1.
+
+            with open("DFS_matriz_adjacencia", 'w', encoding='utf-8') as arquivo:
+                arquivo.write("Árvore de Busca em Profundidade (DFS) usando Matriz de Adjacência:\n")
+                for v in range(self.num_vertices):
+                    if vetor_pais_e_niveis[v][0] is not None:
+                        arquivo.write(f"Vértice {v+1}: Pai = {vetor_pais_e_niveis[v][0]}, Nível = {vetor_pais_e_niveis[v][1]}\n")
+
+            return vetor_pais_e_niveis  # Retorna o vetor de pais e níveis.
+        
+        if modo == 2:  # DFS usando o vetor de adjacência para representação
+            vetor_marcacao = np.zeros(self.num_vertices, dtype=int)
+            vetor_pais_e_niveis = np.full((self.num_vertices, 2), np.array([None, None]))
+            vetor_pais_e_niveis[vertice_inicial - 1][1] = 0
+            P = Pilha()
+            P.push(vertice_inicial)
+            vetor_adjacencia = self.vetor_de_adjacencia()
+
+            while not P.isEmpty():
+                u = P.pop()
+                vizinho_atual = vetor_adjacencia[u - 1].head
+
+                while vizinho_atual:
+                    valor_vizinho = vizinho_atual.valor
+                    if vetor_marcacao[valor_vizinho - 1] == 0:
+                        vetor_marcacao[valor_vizinho - 1] = 1
+                        P.push(valor_vizinho)
+                        vetor_pais_e_niveis[valor_vizinho - 1][0] = u
+                        vetor_pais_e_niveis[valor_vizinho - 1][1] = vetor_pais_e_niveis[u - 1][1] + 1
+
+                    vizinho_atual = vizinho_atual.next
+
+            with open("DFS_vetor_adjacencia", 'w', encoding='utf-8') as arquivo:
+                arquivo.write("Árvore de Busca em Profundidade (DFS) usando Vetor de Adjacência:\n")
+                for v in range(self.num_vertices):
+                    if vetor_pais_e_niveis[v][0] is not None:
+                        arquivo.write(f"Vértice {v + 1}: Pai = {vetor_pais_e_niveis[v][0]}, Nível = {vetor_pais_e_niveis[v][1]}\n")
+
+            return vetor_pais_e_niveis  # Retorna o vetor de pais e níveis.
+
                 
                 
                 
@@ -216,16 +256,31 @@ if __name__ == "__main__":
             meu_grafo.imprimir_informacoes()
         elif opcao == '2':
             vertice_inicial = int(input("Digite o vértice inicial para a BFS: "))
-            print(meu_grafo.BFS(vertice_inicial,escolha_representacao))
+            print("\nÁrvore de Busca em Largura (BFS):")
+            bfs_result = meu_grafo.BFS(vertice_inicial, escolha_representacao)
+            for v in range(meu_grafo.num_vertices):
+                if bfs_result[v][0] is not None:
+                    print(f"Vértice {v+1}: Pai = {bfs_result[v][0]}, Nível = {bfs_result[v][1]}")
         elif opcao == '3':
             vertice_inicial = int(input("Digite o vértice inicial para a DFS: "))
-            print(meu_grafo.DFS(vertice_inicial,escolha_representacao))
+            print("Árvore de Busca em Profundidade (DFS):")
+            dfs_result = meu_grafo.DFS(vertice_inicial, escolha_representacao)
+            
+            for v in range(meu_grafo.num_vertices):
+                if dfs_result[v] is not None:
+                    pai, nivel = dfs_result[v]
+                    print(f"Vértice {v+1}: Pai = {pai}, Nível = {nivel}")
+                else:
+                    print(f"Vértice {v+1} não foi alcançado pela DFS.")
+               #caso para quando a dfs nao alcanda todos os vertices do grafo, ou seja, quando existem vertices que nao sao conectados ao vertice inicial especificado
         elif opcao == '4':
             vertice_inicial = int(input("Digite o vértice inicial: "))
             vertice_final = int(input("Digite o vértice final: "))
-            meu_grafo.distancia(vertice_inicial, vertice_final, escolha_representacao)
+            distancia = meu_grafo.distancia(vertice_inicial, vertice_final, escolha_representacao)
+            print(f'Distância entre o vértice {vertice_inicial} e o vértice {vertice_final}: {distancia}')
         elif opcao == '5':
-            meu_grafo.diametro()
+            diametro = meu_grafo.diametro()
+            print(f'Diâmetro do grafo: {diametro}')
         elif opcao == '6':
             meu_grafo.componentes_conexas()
         elif opcao == '7':
