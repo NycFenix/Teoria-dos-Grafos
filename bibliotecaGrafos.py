@@ -10,15 +10,23 @@ class Grafo:
         self.matriz_adjacencia = None
         self.vetor_adjacencia = None
 
-    def calcular_estruturas_adjacencia(self):
+    def calcular_matriz_adjacencia(self):
         self.matriz_adjacencia = lil_matrix((self.num_vertices, self.num_vertices), dtype=int)
-        self.vetor_adjacencia = [set() for _ in range(self.num_vertices)]
 
         for u, v in self.arestas:
             self.matriz_adjacencia[u - 1, v - 1] = 1
             self.matriz_adjacencia[v - 1, u - 1] = 1
+
+    def calcular_vetor_adjacencia(self):
+        self.vetor_adjacencia = [set() for _ in range(self.num_vertices)]
+
+        for u, v in self.arestas:
             self.vetor_adjacencia[u - 1].add(v)
             self.vetor_adjacencia[v - 1].add(u)
+
+    def calcular_estruturas_adjacencia(self):
+        self.calcular_matriz_adjacencia()
+        self.calcular_vetor_adjacencia()
 
     def adicionar_aresta(self, u, v):
         self.vertices.add(u)

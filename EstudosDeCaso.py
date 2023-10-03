@@ -7,79 +7,71 @@ def medir_memoria():
     process = psutil.Process()
     return process.memory_info().rss / 1024 / 1024  # Retorna em MB
 
-# Função para realizar um teste de busca em largura (BFS)
-def teste_bfs(grafo, num_execucoes=1):
-    print("Teste de Busca em Largura (BFS):")
-    soma_tempo = 0
 
-    for _ in range(num_execucoes):
-        inicio = time.time()
-        resultado_bfs = grafo.BFS(1, 1)  # Execute BFS a partir do vértice 1
-        fim = time.time()
-        tempo_execucao = fim - inicio
-        soma_tempo += tempo_execucao
-
-    tempo_medio = soma_tempo / num_execucoes
-    print(f"Tempo médio de execução de BFS: {tempo_medio:.6f} segundos")
-
-# Função para realizar um teste de busca em profundidade (DFS)
-def teste_dfs(grafo, num_execucoes=1):
-    print("Teste de Busca em Profundidade (DFS):")
-    soma_tempo = 0
-
-    for _ in range(num_execucoes):
-        inicio = time.time()
-        resultado_dfs = grafo.DFS(1, 1)  # Execute DFS a partir do vértice 1
-        fim = time.time()
-        tempo_execucao = fim - inicio
-        soma_tempo += tempo_execucao
-
-    tempo_medio = soma_tempo / num_execucoes
-    print(f"Tempo médio de execução de DFS: {tempo_medio:.6f} segundos")
-
-# Função para realizar o estudo de caso 1 (memória)
-def estudio_de_caso_1(grafo):
-    print("--------Estudo de Caso 1: Comparação de Memória--------")
-    
-    # Calcule a quantidade de memória antes de criar a matriz de adjacência
+# Função principal para realizar o estudo de caso 1 da matriz de adjacência (alocação de memória)
+def estudo_de_caso_matriz(grafo):
+    print("--------Estudo de Caso 1 - Matriz de Adjacência--------")
+    # Medir memória antes de criar a matriz de adjacência
     memoria_antes = medir_memoria()
-    
-    # Calcule a estrutura de adjacência (matriz de adjacência)
-    grafo.calcular_estruturas_adjacencia()
-    
-    # Calcule a quantidade de memória após a criação da matriz de adjacência
+    # Criar a matriz de adjacência
+    grafo.calcular_matriz_adjacencia()
+    # Medir memória após criar a matriz de adjacência
     memoria_depois = medir_memoria()
-    
-    # Calcule a diferença de memória em MB
+    # Calcular a diferença de memória em MB
     diferenca_memoria = memoria_depois - memoria_antes
-    
     print(f"Memória antes da matriz de adjacência: {memoria_antes:.2f} MB")
     print(f"Memória após a matriz de adjacência: {memoria_depois:.2f} MB")
-    print(f"Diferença de memória: {diferenca_memoria:.2f} MB")
+    print(f"Diferença de memória (Matriz): {diferenca_memoria:.2f} MB")
 
-# Função para realizar o estudo de caso 2 (BFS)
-def estudio_de_caso_2(grafo):
-    print("\n--------Estudo de Caso 2: Comparação de Tempo de Execução (BFS)--------")
-    teste_bfs(grafo)
+# Função principal para realizar o estudo de caso 1 do vetor de adjacência (alocação de memória)
+def estudo_de_caso_vetor(grafo):
+    print("--------Estudo de Caso 1 - Vetor de Adjacência--------")
+    # Medir memória antes de criar a matriz de adjacência
+    memoria_antes = medir_memoria()
+    # Criar a matriz de adjacência
+    grafo.calcular_vetor_adjacencia()
+    # Medir memória após criar a matriz de adjacência
+    memoria_depois = medir_memoria()
+    # Calcular a diferença de memória em MB
+    diferenca_memoria = memoria_depois - memoria_antes
+    print(f"Memória antes da vetor de adjacência: {memoria_antes:.2f} MB")
+    print(f"Memória após a vetor de adjacência: {memoria_depois:.2f} MB")
+    print(f"Diferença de memória (Vetor): {diferenca_memoria:.2f} MB")
+#====================================================================================================
+#Estudo de caso 2 - tempo de execucao BFS
 
-# Função para realizar o estudo de caso 3 (DFS)
-def estudio_de_caso_3(grafo):
-    print("\n--------Estudo de Caso 3: Comparação de Tempo de Execução (DFS)--------")
-    teste_dfs(grafo)
+#BFS com matriz
+def teste_bfs_matriz(grafo):
+    print("\n--------Estudo de Caso 2: Comparação de Tempo de Execução (BFS com matriz)--------")
+    inicio = time.time()
+    resultado_bfs = grafo.BFS(1, 1)  # Execute BFS a partir do vértice 1
+    fim = time.time()
+    tempo_execucao = fim - inicio
+    print(f"Tempo de execução de BFS: {tempo_execucao:.6f} segundos")
+
+#BFS com vetor
+def teste_bfs_vetor(grafo):
+    print("\n--------Estudo de Caso 2: Comparação de Tempo de Execução (BFS com vetor)--------")
+    inicio = time.time()
+    resultado_bfs = grafo.BFS(1, 2)  # Execute BFS a partir do vértice 1
+    fim = time.time()
+    tempo_execucao = fim - inicio
+    print(f"Tempo de execução de BFS: {tempo_execucao:.6f} segundos")
 
 # Função principal
 def main():
     grafo = Grafo()
-    grafo.ler_grafo("grafo_2.txt")
+    grafo.ler_grafo("grafo_6.txt")
+
+    # Estudo de Caso 1 - alocacao de Memoria-----------------
+    #estudo_de_caso_matriz(grafo)
+    #estudo_de_caso_vetor(grafo)
     
-    # Estudo de Caso 1: Comparação de Memória
-    estudio_de_caso_1(grafo)
-    
-    # Estudo de Caso 2: Comparação de Tempo de Execução (BFS)
-    estudio_de_caso_2(grafo)
-    
-    # Estudo de Caso 3: Comparação de Tempo de Execução (DFS)
-    estudio_de_caso_3(grafo)
+    #Estudo de caso 2 - tempo de execucao
+    grafo.calcular_vetor_adjacencia()
+    teste_bfs_vetor(grafo)
+    #grafo.calcular_matriz_adjacencia()
+    #teste_bfs_matriz(grafo)
 
 if __name__ == "__main__":
     main()
