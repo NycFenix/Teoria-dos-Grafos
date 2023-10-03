@@ -68,7 +68,7 @@ class Grafo:
         pais = {vertice_inicial: None}
 
         if modo == 1:
-            matriz_adjacencia = self.matriz_adjacencia
+            matriz_adjacencia = self.matriz_adjacencia.toarray()
             while fila:
                 u = fila.popleft()
                 for v in range(self.num_vertices):
@@ -103,7 +103,7 @@ class Grafo:
         nivel[vertice_inicial] = 0
 
         if modo == 1:
-            matriz_adjacencia = self.matriz_adjacencia
+            matriz_adjacencia = self.matriz_adjacencia.toarray()
             while pilha:
                 u = pilha.pop()
                 for v in range(self.num_vertices):
@@ -228,7 +228,7 @@ def escolher_representacao():
 
 if __name__ == "__main__":
     meu_grafo = Grafo()
-    meu_grafo.ler_grafo("grafo_2.txt")
+    meu_grafo.ler_grafo("grafo1.txt")
     meu_grafo.calcular_estruturas_adjacencia()
     meu_grafo.escrever_informacoes("informacoes.txt")
 
