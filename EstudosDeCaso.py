@@ -8,7 +8,7 @@ def medir_memoria():
     return process.memory_info().rss / 1024 / 1024  # Retorna em MB
 
 # Função para realizar um teste de busca em largura (BFS)
-def teste_bfs(grafo, num_execucoes=100):
+def teste_bfs(grafo, num_execucoes=1):
     print("Teste de Busca em Largura (BFS):")
     soma_tempo = 0
 
@@ -23,7 +23,7 @@ def teste_bfs(grafo, num_execucoes=100):
     print(f"Tempo médio de execução de BFS: {tempo_medio:.6f} segundos")
 
 # Função para realizar um teste de busca em profundidade (DFS)
-def teste_dfs(grafo, num_execucoes=100):
+def teste_dfs(grafo, num_execucoes=1):
     print("Teste de Busca em Profundidade (DFS):")
     soma_tempo = 0
 
@@ -39,7 +39,7 @@ def teste_dfs(grafo, num_execucoes=100):
 
 # Função para realizar o estudo de caso 1 (memória)
 def estudio_de_caso_1(grafo):
-    print("Estudo de Caso 1: Comparação de Memória")
+    print("--------Estudo de Caso 1: Comparação de Memória--------")
     
     # Calcule a quantidade de memória antes de criar a matriz de adjacência
     memoria_antes = medir_memoria()
@@ -59,12 +59,12 @@ def estudio_de_caso_1(grafo):
 
 # Função para realizar o estudo de caso 2 (BFS)
 def estudio_de_caso_2(grafo):
-    print("Estudo de Caso 2: Comparação de Tempo de Execução (BFS)")
+    print("\n--------Estudo de Caso 2: Comparação de Tempo de Execução (BFS)--------")
     teste_bfs(grafo)
 
 # Função para realizar o estudo de caso 3 (DFS)
 def estudio_de_caso_3(grafo):
-    print("Estudo de Caso 3: Comparação de Tempo de Execução (DFS)")
+    print("\n--------Estudo de Caso 3: Comparação de Tempo de Execução (DFS)--------")
     teste_dfs(grafo)
 
 # Função principal
