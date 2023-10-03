@@ -5,6 +5,7 @@ np.set_printoptions(threshold=np.inf)
 from bibliotecaFilaPilha import *
 import time
 import sys
+from funcoesAuxiliares import destroy
 class Grafo:
     def __init__(self):
         self.vertices = set()
@@ -40,18 +41,22 @@ class Grafo:
 
     def matriz_de_adjacencia(self): #Método para representação em Matriz de ajacência usando o método np.zeros.
         
-        tempo_inicial = time.time()
+        #tempo_inicial = time.time()
         matriz = np.zeros((self.num_vertices,self.num_vertices), int) #inicializa a matriz com zeros.
         for aresta in self.arestas:  #percorre a lista de arestas.
-            print(aresta)
-            #x, y = aresta #atribui os valores de aresta a x e y.
+                #x, y = aresta #atribui os valores de aresta a x e y.
             x = aresta[0]
             y = aresta[1]
             matriz[x-1][y-1] = 1
-            matriz[y-1][x-1] = 1   #Assumindo que o grafo não é direcionado, atribui as ligações à matriz.
-        t_final = time.time()
-        print (t_final - tempo_inicial)
-        gc.collect()
+            matriz[y-1][x-1] = 1
+            destroy(x)
+            destroy(y)
+            
+            
+            #Assumindo que o grafo não é direcionado, atribui as ligações à matriz.
+        # t_final = time.time()
+        # print (t_final - tempo_inicial)
+        
         return matriz #retorna a matriz de adjacência.
     
     def vetor_de_adjacencia(self): #Método para representação em Lista de adjacência.
@@ -62,7 +67,8 @@ class Grafo:
             g, h = aresta
             vetor[g-1].uniao(h)
             vetor[h-1].uniao(g)
-        gc.collect()    
+
+        destroy(vetor)
         return vetor
     
     def imprimir_informacoes(self):
